@@ -3,17 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>音声聴き取りテスト</title>
+<title>音声聴き取りテスト — T0/T1l 配对</title>
 <style>
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:900px;margin:0 auto;padding:1.5rem;color:#1a1a1a;line-height:1.6;background:#fafafa}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:1000px;margin:0 auto;padding:1.5rem;color:#1a1a1a;line-height:1.6;background:#fafafa}
 h1{border-bottom:3px solid #2c3e50;padding-bottom:.6rem;font-size:1.5em;color:#2c3e50}
 h2{color:#34495e;margin-top:2rem;font-size:1.2em;border-left:4px solid #3498db;padding-left:.8rem}
+h3{color:#e74c3c;margin-top:1.5rem;font-size:1em}
 .case{background:#fff;border:1px solid #ddd;border-radius:8px;padding:1.2rem;margin:1.5rem 0;box-shadow:0 2px 4px rgba(0,0,0,0.05)}
 .case-header{font-weight:600;color:#2c3e50;font-size:1.1em;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:2px solid #ecf0f1}
 .audio-row{display:flex;gap:1rem;margin:.8rem 0;align-items:center;flex-wrap:wrap}
-.audio-label{font-weight:600;min-width:100px;color:#7f8c8d;font-size:.9em}
-audio{flex:1;min-width:200px}
-textarea{width:100%;min-height:80px;padding:.6rem;border:1px solid #bdc3c7;border-radius:4px;font-family:inherit;font-size:.95em;resize:vertical;margin-top:.5rem}
+.audio-label{font-weight:600;min-width:120px;color:#7f8c8d;font-size:.9em}
+.condition-label{display:inline-block;padding:2px 8px;border-radius:3px;font-size:.75em;font-weight:600;margin-left:.5rem}
+.cond-t0{background:#e8f5e9;color:#2e7d32}
+.cond-t1l{background:#fff3e0;color:#ef6c00}
+audio{flex:1;min-width:250px}
+textarea{width:100%;min-height:70px;padding:.6rem;border:1px solid #bdc3c7;border-radius:4px;font-family:inherit;font-size:.95em;resize:vertical;margin-top:.5rem}
 textarea:focus{outline:none;border-color:#3498db;box-shadow:0 0 0 2px rgba(52,152,219,0.1)}
 .btn{background:#3498db;color:#fff;border:none;padding:.7rem 1.5rem;border-radius:5px;cursor:pointer;font-size:1em;font-weight:600;margin:.5rem .3rem}
 .btn:hover{background:#2980b9}
@@ -21,26 +25,30 @@ textarea:focus{outline:none;border-color:#3498db;box-shadow:0 0 0 2px rgba(52,15
 .btn-success:hover{background:#229954}
 .info{background:#e8f4f8;border-left:4px solid #3498db;padding:.8rem 1rem;margin:1rem 0;border-radius:4px;font-size:.9em}
 .warning{background:#fff3cd;border-left:4px solid #ffc107;padding:.8rem 1rem;margin:1rem 0;border-radius:4px;font-size:.9em;color:#856404}
-.progress-bar{width:100%;height:24px;background:#ecf0f1;border-radius:12px;overflow:hidden;margin:1rem 0}
-.progress-fill{height:100%;background:linear-gradient(90deg,#3498db,#2ecc71);transition:width .3s ease;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:.85em}
+.progress-bar{width:100%;height:28px;background:#ecf0f1;border-radius:14px;overflow:hidden;margin:1rem 0}
+.progress-fill{height:100%;background:linear-gradient(90deg,#3498db,#2ecc71);transition:width .3s ease;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:.9em}
+.backend-f5{border-left:4px solid #e74c3c;padding-left:.8rem;margin:.5rem 0}
+.backend-qwen{border-left:4px solid #3498db;padding-left:.8rem;margin:.5rem 0}
 </style>
 </head>
 <body>
 
-<h1>音声聴き取りテスト</h1>
+<h1>音声聴き取りテスト — T0/T1l 配对</h1>
 
 <div class="warning">
-<strong>注意：</strong>各ケースについて、F5とQwenの<strong>両方の</strong>音声を聞いてください。音声ファイル名に「_f5」「_qwen」が含まれています。
+<strong>重要：</strong>各音声ファイルについて、聞こえたままを正確に書き取ってください。<br>
+<strong>T0</strong> = 基準音声（opener なし）、<strong>T1l</strong> = 処理音声（長い opener 付き）<br>
+同じ内容、同じ backend、同じ seed の T0 と T1l を比較してください。
 </div>
 
 <div class="info">
-<strong>目的：</strong>音声の後半部分（body）を聞いて、聞こえたままに書き取ってください。<br>
-<strong>方法：</strong>各ケースの T0（基準）と T1l（処理）の音声を聞き、T1lの下半分の書き取りを入力してください。<br>
-<strong>注意：</strong>前後の文脈は知らなくて構いません。聞こえた音を書き取ってください。
+<strong>目的：</strong>T0 と T1l の本文部分（body）の聞き取りを比較し、opener の影響を評価する<br>
+<strong>方法：</strong>各音声の後半部分（body）を聞いて、聞こえたままに書き取る<br>
+<strong>注意：</strong>前後の文脈は知らなくて構いません。聞こえた音をそのまま書いてください。
 </div>
 
 <div class="progress-bar">
-<div class="progress-fill" id="progress" style="width:0%">0/42</div>
+<div class="progress-fill" id="progress" style="width:0%">0/84</div>
 </div>
 
 <div id="cases-container"></div>
@@ -58,13 +66,13 @@ textarea:focus{outline:none;border-color:#3498db;box-shadow:0 0 0 2px rgba(52,15
 
 <script>
 const CASES = [
-  {id:'JSUT_DRAW_096',delta:'+0.140'},
-  {id:'JSUT_DRAW_086',delta:'+0.104'},
-  {id:'JSUT_DRAW_179',delta:'+0.083'},
-  {id:'JSUT_DRAW_020',delta:'+0.063'},
-  {id:'JSUT_DRAW_045',delta:'+0.061'},
-  {id:'JSUT_DRAW_153',delta:'+0.061'},
-  {id:'JSUT_DRAW_050',delta:'+0.058'}
+  {id:'JSUT_DRAW_096',name:'Case 1'},
+  {id:'JSUT_DRAW_086',name:'Case 2'},
+  {id:'JSUT_DRAW_179',name:'Case 3'},
+  {id:'JSUT_DRAW_020',name:'Case 4'},
+  {id:'JSUT_DRAW_045',name:'Case 5'},
+  {id:'JSUT_DRAW_153',name:'Case 6'},
+  {id:'JSUT_DRAW_050',name:'Case 7'}
 ];
 const BACKENDS = ['f5','qwen'];
 const SEEDS = [42,43,44];
@@ -74,21 +82,24 @@ function buildCases(){
   const container=document.getElementById('cases-container');
   let html='';
   CASES.forEach((c,ci)=>{
-    html+=`<div class="case"><div class="case-header">ケース ${ci+1}: ${c.id} <span style="float:right;color:#7f8c8d;font-size:.9em">ASR Δ = ${c.delta}</span></div>`;
+    html+=`<div class="case"><div class="case-header">${c.name}: ${c.id}</div>`;
     BACKENDS.forEach(b=>{
-      html+=`<h3 style="color:#${b==='f5'?'e74c3c':'3498db'};margin-top:1.5rem;font-size:1em">${b.toUpperCase()} Backend</h3>`;
+      const backendClass = b === 'f5' ? 'backend-f5' : 'backend-qwen';
+      html+=`<div class="${backendClass}"><h3>${b.toUpperCase()} Backend</h3>`;
       SEEDS.forEach(s=>{
         CONDITIONS.forEach(cond=>{
           const audioPath=`audio/${c.id}__${cond}__seed${s}_${b}.wav`;
+          const condClass = cond === 'T0' ? 'cond-t0' : 'cond-t1l';
+          const textId=`${c.id}__${cond}__seed${s}__${b}`;
           html+=`<div class="audio-row">`;
-          html+=`<span class="audio-label">S${s} ${cond}</span>`;
+          html+=`<span class="audio-label">Seed ${s} <span class="condition-label ${condClass}">${cond}</span></span>`;
           html+=`<audio controls preload="none" src="${audioPath}"></audio>`;
           html+=`</div>`;
+          html+=`<div style="margin:.3rem 0"><label style="font-size:.85em;color:#555">${cond} 書き取り:</label>`;
+          html+=`<textarea id="${textId}" placeholder="聞こえたままに入力..." oninput="updateProgress()"></textarea></div>`;
         });
-        const textId=`${c.id}__seed${s}__${b}`;
-        html+=`<div style="margin:.5rem 0"><label style="font-weight:600;color:#34495e;font-size:.9em">${b.toUpperCase()} S${s} T1l 書き取り:</label>`;
-        html+=`<textarea id="${textId}" placeholder="聞こえたままに入力..." oninput="updateProgress()"></textarea></div>`;
       });
+      html+=`</div>`;
     });
     html+=`</div>`;
   });
@@ -96,12 +107,14 @@ function buildCases(){
 }
 
 function updateProgress(){
-  let done=0,total=CASES.length*BACKENDS.length*SEEDS.length;
+  let done=0,total=CASES.length*BACKENDS.length*SEEDS.length*CONDITIONS.length;
   CASES.forEach(c=>{
     BACKENDS.forEach(b=>{
       SEEDS.forEach(s=>{
-        const el=document.getElementById(`${c.id}__seed${s}__${b}`);
-        if(el&&el.value.trim().length>0)done++;
+        CONDITIONS.forEach(cond=>{
+          const el=document.getElementById(`${c.id}__${cond}__seed${s}__${b}`);
+          if(el&&el.value.trim().length>0)done++;
+        });
       });
     });
   });
@@ -112,13 +125,15 @@ function updateProgress(){
 }
 
 function exportResults(){
-  const results={timestamp:new Date().toISOString(),responses:{}};
+  const results={timestamp:new Date().toISOString(),test_type:'paired_T0_T1l',responses:{}};
   CASES.forEach(c=>{
     BACKENDS.forEach(b=>{
       SEEDS.forEach(s=>{
-        const key=`${c.id}__seed${s}__${b}`;
-        const el=document.getElementById(key);
-        if(el)results.responses[key]={transcription:el.value.trim(),backend:b,seed:s,case_id:c.id};
+        CONDITIONS.forEach(cond=>{
+          const key=`${c.id}__${cond}__seed${s}__${b}`;
+          const el=document.getElementById(key);
+          if(el)results.responses[key]={transcription:el.value.trim(),condition:cond,backend:b,seed:s,case_id:c.id};
+        });
       });
     });
   });
@@ -128,7 +143,7 @@ function exportResults(){
   const blob=new Blob([json],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download=`listening_test_results_${Date.now()}.json`;
+  a.download=`paired_listening_test_${Date.now()}.json`;
   a.click();
 }
 
@@ -137,18 +152,20 @@ function saveProgress(){
   CASES.forEach(c=>{
     BACKENDS.forEach(b=>{
       SEEDS.forEach(s=>{
-        const key=`${c.id}__seed${s}__${b}`;
-        const el=document.getElementById(key);
-        if(el)data[key]=el.value;
+        CONDITIONS.forEach(cond=>{
+          const key = `${c.id}__${cond}__seed${s}__${b}`;
+          const el=document.getElementById(key);
+          if(el)data[key]=el.value;
+        });
       });
     });
   });
-  localStorage.setItem('listening_test_progress',JSON.stringify(data));
+  localStorage.setItem('paired_listening_progress',JSON.stringify(data));
   alert('進捗を保存しました');
 }
 
 function loadProgress(){
-  const data=localStorage.getItem('listening_test_progress');
+  const data=localStorage.getItem('paired_listening_progress');
   if(!data){alert('保存された進捗がありません');return;}
   const parsed=JSON.parse(data);
   Object.keys(parsed).forEach(key=>{
@@ -160,7 +177,7 @@ function loadProgress(){
 }
 
 buildCases();
-if(localStorage.getItem('listening_test_progress'))loadProgress();
+if(localStorage.getItem('paired_listening_progress'))loadProgress();
 </script>
 
 </body>
