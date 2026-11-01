@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P0-1 Human Transcription Validation — Protocol & Frozen Materials</title>
+<style>
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 900px; margin: 0 auto; padding: 2rem; color: #1a1a1a; line-height: 1.6; }
+h1 { border-bottom: 2px solid #333; padding-bottom: 0.5rem; }
+h2 { color: #2c3e50; margin-top: 2rem; border-left: 4px solid #3498db; padding-left: 1rem; }
+table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.9em; }
+th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
+th { background: #f5f5f5; font-weight: 600; }
+tr:nth-child(even) { background: #fafafa; }
+code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; }
+.meta { color: #666; font-size: 0.9em; }
+.section { margin: 1.5rem 0; padding: 1rem; background: #f8f9fa; border-radius: 6px; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: 600; }
+.badge-complete { background: #d4edda; color: #155724; }
+.badge-ready { background: #fff3cd; color: #856404; }
+.badge-blocked { background: #f8d7da; color: #721c24; }
+.hash { font-family: monospace; font-size: 0.75em; color: #666; word-break: break-all; }
+</style>
+</head>
+<body>
+
+<h1>P0-1: Human Transcription Validation Protocol</h1>
+<p class="meta">NACHO-Cert (AAAI-2027 Submission #25935) | Date: 2026-11-01 | Status: Materials Frozen, Protocol Ready</p>
+
+<h2>1. Objective</h2>
+<div class="section">
+<p>Establish whether body-local CER increases detected by ASR (faster-whisper-small) correspond to human-perceivable audio degradation in 7 catastrophe events from a prospective N=200 TTS study.</p>
+<p><strong>Core question:</strong> When ASR detects body text damage after an opener is prepended, can human listeners also hear the damage?</p>
+</div>
+
+<h2>2. Frozen Sample Manifest (G0-G1: COMPLETE)</h2>
+<div class="section">
+<p>7 catastrophe events identified from N=200 data by maximum body CER increase (T1l vs T0). All audio files verified available with SHA256 provenance hashes.</p>
+
+<table>
+<tr><th>Event</th><th>Draw ID</th><th>Body ST (ASR)</th><th>Body CER T0</th><th>Body CER T1l</th><th>Files</th></tr>
+<tr><td>E01</td><td>JSUT_DRAW_096</td><td>+0.1404</td><td>0.1404</td><td>0.2807</td><td>24 WAV (2 backends x 2 variants x 3 seeds x T0+T1l)</td></tr>
+<tr><td>E02</td><td>JSUT_DRAW_086</td><td>+0.1042</td><td>0.0000</td><td>0.1042</td><td>24 WAV</td></tr>
+<tr><td>E03</td><td>JSUT_DRAW_179</td><td>+0.0833</td><td>0.0625</td><td>0.1458</td><td>24 WAV</td></tr>
+<tr><td>E04</td><td>JSUT_DRAW_020</td><td>+0.0625</td><td>0.0278</td><td>0.0903</td><td>24 WAV</td></tr>
+<tr><td>E05</td><td>JSUT_DRAW_045</td><td>+0.0606</td><td>0.0682</td><td>0.1288</td><td>24 WAV</td></tr>
+<tr><td>E06</td><td>JSUT_DRAW_153</td><td>+0.0606</td><td>0.0682</td><td>0.1288</td><td>24 WAV</td></tr>
+<tr><td>E07</td><td>JSUT_DRAW_050</td><td>+0.0583</td><td>0.0000</td><td>0.0583</td><td>24 WAV</td></tr>
+</table>
+
+<p><strong>Total:</strong> 168 audio files (7 events x 2 backends x 2 variants x 3 seeds x 2 conditions), all confirmed available. SHA256 hashes recorded in frozen manifest.</p>
+<p><strong>Audio location:</strong> <code>/mnt/data/AoduoLi/nacho_rebuttal/experiments/validation_20261026/n200_prospective/audio/{f5,qwen}/</code></p>
+<p><strong>Naming convention:</strong> <code>{DRAW_ID}__{VARIANT}__seed{SEED}.wav</code></p>
+</div>
+
+<h2>3. Experimental Protocol (G2-G5)</h2>
+
+<h3>G2: Human Blind Listening</h3>
+<div class="section">
+<ul>
+<li><strong>Annotators:</strong> 3 Japanese-native listeners (required; cannot be automated)</li>
+<li><strong>Protocol:</strong> Randomized order playback, no reference text shown, no ASR output shown</li>
+<li><strong>Task:</strong> Dictate exactly what you hear. Write every character. If you cannot hear clearly, write what you guess.</li>
+<li><strong>Conditions per event:</strong> T0 (baseline) and T1l (long opener) for each backend</li>
+<li><strong>Blinding:</strong> Annotators do not know which condition they are hearing</li>
+</ul>
+</div>
+
+<h3>G3: Body Text Extraction</h3>
+<div class="section">
+<ul>
+<li>Using the pre-defined body boundary (same prefix proxy as ASR analysis), separate each human transcription into opener and body portions</li>
+<li>Record boundary location and any ambiguity notes</li>
+</ul>
+</div>
+
+<h3>G4: Independent CER Computation</h3>
+<div class="section">
+<ul>
+<li>Compute human body CER using identical hiragana normalization as ASR pipeline</li>
+<li>Formula: <code>L_i^H(a) = CER(H_i(a), c_i)</code> where <code>H_i(a)</code> is annotator's transcription and <code>c_i</code> is reference body text</li>
+<li>Compute per-annotator, per-audio, per-condition</li>
+</ul>
+</div>
+
+<h3>G5: Statistical Comparison</h3>
+<div class="section">
+<ul>
+<li><strong>Primary metric:</strong> Human body ST = L_i^H(T1l) - L_i^H(T0)</li>
+<li><strong>Comparison:</strong> Human ST vs ASR ST per event (direction agreement, not magnitude match)</li>
+<li><strong>Inter-annotator agreement:</strong> Fleiss' kappa for categorical judgments; ICC for continuous CER</li>
+<li><strong>Deliverable:</strong> 7-event comparison table:</li>
+</ul>
+<table>
+<tr><th>Event</th><th>ASR ST</th><th>Human ST (mean)</th><th>Human ST (per annotator)</th><th>Direction match?</th><th>Interpretation</th></tr>
+<tr><td>E01</td><td>+0.1404</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+<tr><td>E02</td><td>+0.1042</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+<tr><td>E03</td><td>+0.0833</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+<tr><td>E04</td><td>+0.0625</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+<tr><td>E05</td><td>+0.0606</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+<tr><td>E06</td><td>+0.0606</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+<tr><td>E07</td><td>+0.0583</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+</table>
+</div>
+
+<h2>4. Three Possible Outcomes</h2>
+<div class="section">
+<table>
+<tr><th>Outcome</th><th>Scientific Interpretation</th><th>Implication for NACHO</th></tr>
+<tr><td>Human and ASR both detect body damage</td><td>Real human-perceivable degradation exists</td><td>Strongest positive evidence</td></tr>
+<tr><td>ASR detects damage, human does not</td><td>Body CER increase is ASR-specific (recognizer sensitivity to opener conditions)</td><td>Supports ASR-mediated audit; cannot claim perceptual degradation</td></tr>
+<tr><td>Human detects damage, ASR does not</td><td>Detector has false negatives; FN rate is the validity threat</td><td>Requires reporting ASR coverage limitations</td></tr>
+</table>
+<p class="meta">Note: These 7 events are selected for extreme ASR-detected damage. Results cannot be generalized to estimate population-level catastrophe rates without expansion to the full N=200 content pool.</p>
+</div>
+
+<h2>5. Limitations</h2>
+<div class="section">
+<ul>
+<li>7 events are ASR-selected extremes, not a random sample</li>
+<li>Results are case evidence, not population estimates</li>
+<li>Hiragana normalization may not capture all perceptual differences (e.g., kanji substitution)</li>
+<li>3 annotators provide inter-rater reliability but not population-level human performance estimates</li>
+<li>Original N=60 paper's catastrophe events are different from these N=200 events (different data, different backends)</li>
+</ul>
+</div>
+
+<h2>6. Execution Status</h2>
+<div class="section">
+<p><span class="badge badge-complete">COMPLETE</span> G0: Material accessibility audit — 168/168 files available</p>
+<p><span class="badge badge-complete">COMPLETE</span> G1: Frozen sample manifest with SHA256 hashes</p>
+<p><span class="badge badge-blocked">BLOCKED</span> G2: Human blind listening — requires 3 Japanese-native annotators</p>
+<p><span class="badge badge-blocked">BLOCKED</span> G3: Body text extraction — depends on G2</p>
+<p><span class="badge badge-blocked">BLOCKED</span> G4: CER computation — depends on G3</p>
+<p><span class="badge badge-blocked">BLOCKED</span> G5: Statistical comparison — depends on G4</p>
+</div>
+
+<h2>7. Supporting Automated Evidence (Already Complete)</h2>
+<div class="section">
+<p>17 automated analyses (E-036 to E-051) on the N=200 prospective study data provide the statistical foundation that motivates this human validation:</p>
+<ul>
+<li><strong>E-037:</strong> Opener damage is 8.2x larger than body damage (91% of full-utterance error comes from opener)</li>
+<li><strong>E-038:</strong> Body CER increase is statistically significant (p=0.026 at T1m; p=0.003 in alignment-clean subset)</li>
+<li><strong>E-045:</strong> Boundary method is stable across seeds (mean variance 0.001864)</li>
+<li><strong>E-046:</strong> Effect is not driven by any single seed or backend (4/6 seed-backend combos positive)</li>
+<li><strong>E-047:</strong> Body effect survives excluding high-alignment-error samples (78% retained, p=0.003)</li>
+<li><strong>E-048:</strong> Negative control passes — T1s (short opener) shows no significant body damage (p=0.789)</li>
+<li><strong>E-050:</strong> All 7 catastrophe events individually confirmed (p<0.05 each, 100% direction consistent)</li>
+</ul>
+</div>
+
+<hr>
+<p class="meta">Protocol version 1.0 | 2026-11-01 | For questions: contact corresponding author of Submission #25935</p>
+</body>
+</html>
