@@ -11,7 +11,7 @@ h2{color:#34495e;margin-top:2rem;font-size:1.2em;border-left:4px solid #3498db;p
 .case{background:#fff;border:1px solid #ddd;border-radius:8px;padding:1.2rem;margin:1.5rem 0;box-shadow:0 2px 4px rgba(0,0,0,0.05)}
 .case-header{font-weight:600;color:#2c3e50;font-size:1.1em;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:2px solid #ecf0f1}
 .audio-row{display:flex;gap:1rem;margin:.8rem 0;align-items:center;flex-wrap:wrap}
-.audio-label{font-weight:600;min-width:60px;color:#7f8c8d;font-size:.9em}
+.audio-label{font-weight:600;min-width:100px;color:#7f8c8d;font-size:.9em}
 audio{flex:1;min-width:200px}
 textarea{width:100%;min-height:80px;padding:.6rem;border:1px solid #bdc3c7;border-radius:4px;font-family:inherit;font-size:.95em;resize:vertical;margin-top:.5rem}
 textarea:focus{outline:none;border-color:#3498db;box-shadow:0 0 0 2px rgba(52,152,219,0.1)}
@@ -20,10 +20,7 @@ textarea:focus{outline:none;border-color:#3498db;box-shadow:0 0 0 2px rgba(52,15
 .btn-success{background:#27ae60}
 .btn-success:hover{background:#229954}
 .info{background:#e8f4f8;border-left:4px solid #3498db;padding:.8rem 1rem;margin:1rem 0;border-radius:4px;font-size:.9em}
-.status{display:inline-block;padding:3px 8px;border-radius:4px;font-size:.8em;font-weight:600;margin-left:.5rem}
-.status-done{background:#d4edda;color:#155724}
-.status-pending{background:#fff3cd;color:#856404}
-#export-area{background:#f8f9fa;border:1px solid #dee2e6;padding:1rem;border-radius:5px;margin-top:1rem;max-height:300px;overflow-y:auto}
+.warning{background:#fff3cd;border-left:4px solid #ffc107;padding:.8rem 1rem;margin:1rem 0;border-radius:4px;font-size:.9em;color:#856404}
 .progress-bar{width:100%;height:24px;background:#ecf0f1;border-radius:12px;overflow:hidden;margin:1rem 0}
 .progress-fill{height:100%;background:linear-gradient(90deg,#3498db,#2ecc71);transition:width .3s ease;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:.85em}
 </style>
@@ -32,9 +29,13 @@ textarea:focus{outline:none;border-color:#3498db;box-shadow:0 0 0 2px rgba(52,15
 
 <h1>音声聴き取りテスト</h1>
 
+<div class="warning">
+<strong>注意：</strong>各ケースについて、F5とQwenの<strong>両方の</strong>音声を聞いてください。音声ファイル名に「_f5」「_qwen」が含まれています。
+</div>
+
 <div class="info">
 <strong>目的：</strong>音声の後半部分（body）を聞いて、聞こえたままに書き取ってください。<br>
-<strong>方法：</strong>各ケースの T0（基準）と T1l（処理）の音声を聞き、下半分の書き取りを入力してください。<br>
+<strong>方法：</strong>各ケースの T0（基準）と T1l（処理）の音声を聞き、T1lの下半分の書き取りを入力してください。<br>
 <strong>注意：</strong>前後の文脈は知らなくて構いません。聞こえた音を書き取ってください。
 </div>
 
@@ -75,12 +76,12 @@ function buildCases(){
   CASES.forEach((c,ci)=>{
     html+=`<div class="case"><div class="case-header">ケース ${ci+1}: ${c.id} <span style="float:right;color:#7f8c8d;font-size:.9em">ASR Δ = ${c.delta}</span></div>`;
     BACKENDS.forEach(b=>{
+      html+=`<h3 style="color:#${b==='f5'?'e74c3c':'3498db'};margin-top:1.5rem;font-size:1em">${b.toUpperCase()} Backend</h3>`;
       SEEDS.forEach(s=>{
         CONDITIONS.forEach(cond=>{
-          const fid=`${c.id}__${cond}__seed${s}__${b}`;
-          const audioPath=`audio/${c.id}__${cond}__seed${s}.wav`;
+          const audioPath=`audio/${c.id}__${cond}__seed${s}_${b}.wav`;
           html+=`<div class="audio-row">`;
-          html+=`<span class="audio-label">${b.toUpperCase()} S${s} ${cond}</span>`;
+          html+=`<span class="audio-label">S${s} ${cond}</span>`;
           html+=`<audio controls preload="none" src="${audioPath}"></audio>`;
           html+=`</div>`;
         });
